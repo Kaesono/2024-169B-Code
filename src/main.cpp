@@ -100,7 +100,4 @@ void opcontrol() {
 		right_wheel_middle.move(master.get_analog(ANALOG_RIGHT_Y));
 		right_wheel_back.move(master.get_analog(ANALOG_RIGHT_Y));
 	}
-
-
-	return 0;
 }
