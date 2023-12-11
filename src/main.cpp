@@ -74,20 +74,33 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(-17 , -18, -20);
-	pros::Motor right_mtr(11, 13, 15);
+
+	// Set left wheel ports
+	pros::Motor left_wheel_front (12);
+	pros::Motor left_wheel_middle (13);
+	pros::Motor left_wheel_back (15);
+
+	// Set right wheel ports
+	pros::Motor right_wheel_front (17, true);
+	pros::Motor right_wheel_middle (18, true);
+	pros::Motor right_wheel_back (20, true);
+
+	// Set controller
+	pros::Controller master (CONTROLLER_MASTER);
 
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = -master.get_analog(ANALOG_RIGHT_Y);
 
-		left_mtr = left;
-		right_mtr = right;
+		// Drive code left
+		left_wheel_front.move(master.get_analog(ANALOG_LEFT_Y));
+		left_wheel_middle.move(master.get_analog(ANALOG_LEFT_Y));
+		left_wheel_back.move(master.get_analog(ANALOG_LEFT_Y));
 
-		pros::delay(20);
+		// Drive code right
+		right_wheel_front.move(master.get_analog(ANALOG_RIGHT_Y));
+		right_wheel_middle.move(master.get_analog(ANALOG_RIGHT_Y));
+		right_wheel_back.move(master.get_analog(ANALOG_RIGHT_Y));
 	}
+
+
+	return 0;
 }
