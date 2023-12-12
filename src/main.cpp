@@ -75,12 +75,12 @@ void autonomous() {}
  */
 void opcontrol() {
 
-	// Set left wheel ports
+	// Set left wheel ports (true indicates reversed)
 	pros::Motor left_wheel_front (17, true);
 	pros::Motor left_wheel_middle (18);
 	pros::Motor left_wheel_back (20, true);
 
-	// Set right wheel ports
+	// Set right wheel ports (true indicates reversed)
 	pros::Motor right_wheel_front (12, true);
 	pros::Motor right_wheel_middle (13);
 	pros::Motor right_wheel_back (15, true);
