@@ -76,14 +76,14 @@ void autonomous() {}
 void opcontrol() {
 
 	// Set left wheel ports
-	pros::Motor left_wheel_front (12);
-	pros::Motor left_wheel_middle (13);
-	pros::Motor left_wheel_back (15);
+	pros::Motor left_wheel_front (17, true);
+	pros::Motor left_wheel_middle (18);
+	pros::Motor left_wheel_back (20, true);
 
 	// Set right wheel ports
-	pros::Motor right_wheel_front (17, true);
-	pros::Motor right_wheel_middle (18, true);
-	pros::Motor right_wheel_back (20, true);
+	pros::Motor right_wheel_front (12, true);
+	pros::Motor right_wheel_middle (13);
+	pros::Motor right_wheel_back (15, true);
 
 	// Set controller
 	pros::Controller master (CONTROLLER_MASTER);
