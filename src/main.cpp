@@ -1,3 +1,4 @@
+// "main.h" houses some functions like handleIntake and handleCatapult
 #include "main.h"
 
 /**
@@ -76,28 +77,85 @@ void autonomous() {}
 void opcontrol() {
 
 	// Set left wheel ports (true indicates reversed)
-	pros::Motor left_wheel_front (17, true);
-	pros::Motor left_wheel_middle (18);
-	pros::Motor left_wheel_back (20, true);
+	pros::Motor left_wheel_front (11, true);
+	pros::Motor left_wheel_middle (12, true);
+	pros::Motor left_wheel_back (14);
 
 	// Set right wheel ports (true indicates reversed)
-	pros::Motor right_wheel_front (12, true);
-	pros::Motor right_wheel_middle (13);
-	pros::Motor right_wheel_back (15, true);
+	pros::Motor right_wheel_front (20);
+	pros::Motor right_wheel_middle (18);
+	pros::Motor right_wheel_back (17, true);
+
+	// Set intake motor port
+	pros::Motor intake (1);
+
+	// Set catapult motor port
+	pros::Motor catapult (10);
 
 	// Set controller
 	pros::Controller master (CONTROLLER_MASTER);
 
-	while (true) {
+	int intakeState = 0;
+	double catapultValue = 0;
 
-		// Drive code left
-		left_wheel_front.move(master.get_analog(ANALOG_LEFT_Y));
-		left_wheel_middle.move(master.get_analog(ANALOG_LEFT_Y));
-		left_wheel_back.move(master.get_analog(ANALOG_LEFT_Y));
+while (true) {
 
-		// Drive code right
-		right_wheel_front.move(master.get_analog(ANALOG_RIGHT_Y));
-		right_wheel_middle.move(master.get_analog(ANALOG_RIGHT_Y));
-		right_wheel_back.move(master.get_analog(ANALOG_RIGHT_Y));
+	// Drive code left
+	left_wheel_front.move(master.get_analog(ANALOG_LEFT_Y));
+	left_wheel_middle.move(master.get_analog(ANALOG_LEFT_Y));
+	left_wheel_back.move(master.get_analog(ANALOG_LEFT_Y));
+
+	// Drive code right
+	right_wheel_front.move(master.get_analog(ANALOG_RIGHT_Y));
+	right_wheel_middle.move(master.get_analog(ANALOG_RIGHT_Y));
+	right_wheel_back.move(master.get_analog(ANALOG_RIGHT_Y));
+
+
+	// Handle intake
+	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+		intakeState = -1;
 	}
+	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+		intakeState = 1;
+	}
+	else {
+		intakeState = 0;
+	}
+
+	double intakeValue = intakeState * 127;
+	intake.move(intakeValue);
+
+
+	// Handle catapult
+	if (catapultValue > -51 and catapultValue < 201){
+
+		// Handle button presses to increase and decrease motor speed
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
+			double catapultValue = catapultValue + 10;
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+			double catapultValue = catapultValue - 10;
+		}
+	}
+
+	else {
+
+		// Handle override to make sure that the motor does not go too fast
+		if (catapultValue < -50){
+			double catapultValue = -50;
+		}
+
+		else if (catapultValue > 200){
+			double catapultValue = 200;
+		}
+	}
+
+	// Move catapult by catapultValue
+	catapult.move(catapultValue);
+	
+
+// Delay (this is necessary for some reason)
+pros::delay(20);
+}
 }
