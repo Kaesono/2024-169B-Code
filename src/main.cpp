@@ -1,6 +1,31 @@
 // "main.h" houses some functions like handleIntake and handleCatapult
 #include "main.h"
 
+
+
+// Set left wheel ports (true indicates reversed)
+pros::Motor left_wheel_front (17, true);
+pros::Motor left_wheel_middle (18);
+pros::Motor left_wheel_back (20, true);
+
+// Set right wheel ports (true indicates reversed)
+pros::Motor right_wheel_front (12);
+pros::Motor right_wheel_middle (14, true);
+pros::Motor right_wheel_back (15);
+
+// Set intake motor port
+pros::Motor intake (5);
+
+// Set catapult motor port
+pros::Motor catapult (10);
+
+// Set hang pneumatic port
+pros::ADIDigitalOut hang ('A', false);
+
+// Set wings pneumatic port
+pros::ADIDigitalOut wings ('C', false);
+
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -25,9 +50,16 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	pros::lcd::set_text(1, "Startup nominal");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+
+	left_wheel_back.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	left_wheel_front.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	left_wheel_middle.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	right_wheel_back.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	right_wheel_front.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	right_wheel_middle.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 /**
@@ -59,7 +91,40 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	pros::lcd::set_text(2, "Start autonomous code");
+
+	move(127, 127, 200);
+	move(-127, 127, 100);
+	move(127, 127, 400);
+	intake.move(127);
+	move(127, -127, 100);
+	move(127, 127, 500);
+	move(-127, -127, 5000);
+
+}
+
+void move(int left, int right, double seconds) {
+	// Move motors
+	left_wheel_front.move(left);
+	left_wheel_middle.move(left);
+	left_wheel_back.move(left);
+
+	right_wheel_front.move(right);
+	right_wheel_middle.move(right);
+	right_wheel_back.move(right);
+	
+	pros::delay(seconds);
+
+	left_wheel_front.brake();
+	left_wheel_middle.brake();
+	left_wheel_back.brake();
+
+	right_wheel_front.brake();
+	right_wheel_middle.brake();
+	right_wheel_back.brake();
+	
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -76,27 +141,13 @@ void autonomous() {}
  */
 void opcontrol() {
 
-	// Set left wheel ports (true indicates reversed)
-	pros::Motor left_wheel_front (11, true);
-	pros::Motor left_wheel_middle (12, true);
-	pros::Motor left_wheel_back (14);
-
-	// Set right wheel ports (true indicates reversed)
-	pros::Motor right_wheel_front (20);
-	pros::Motor right_wheel_middle (18);
-	pros::Motor right_wheel_back (17, true);
-
-	// Set intake motor port
-	pros::Motor intake (1);
-
-	// Set catapult motor port
-	pros::Motor catapult (10);
-
 	// Set controller
 	pros::Controller master (CONTROLLER_MASTER);
 
+	// Set initial states
 	int intakeState = 0;
-	double catapultValue = 0;
+	bool hangValue =  false;
+	bool wingsValue = false;
 
 while (true) {
 
@@ -111,6 +162,7 @@ while (true) {
 	right_wheel_back.move(master.get_analog(ANALOG_RIGHT_Y));
 
 
+
 	// Handle intake
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
 		intakeState = -1;
@@ -118,7 +170,7 @@ while (true) {
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
 		intakeState = 1;
 	}
-	else {
+	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
 		intakeState = 0;
 	}
 
@@ -126,34 +178,34 @@ while (true) {
 	intake.move(intakeValue);
 
 
+
 	// Handle catapult
-	if (catapultValue > -51 and catapultValue < 201){
+	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
+		catapult.move(-69);
+	}
 
-		// Handle button presses to increase and decrease motor speed
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-			double catapultValue = catapultValue + 10;
-		}
-
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-			double catapultValue = catapultValue - 10;
-		}
+	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+		catapult.move(69);
 	}
 
 	else {
+		catapult.move(0);
+	}
+	
 
-		// Handle override to make sure that the motor does not go too fast
-		if (catapultValue < -50){
-			double catapultValue = -50;
-		}
-
-		else if (catapultValue > 200){
-			double catapultValue = 200;
-		}
+	// Handle hang	
+	if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+		hangValue = !hangValue;
 	}
 
-	// Move catapult by catapultValue
-	catapult.move(catapultValue);
-	
+	// Handle wings
+	if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+		wingsValue = !wingsValue;
+	}
+
+	hang.set_value(hangValue);
+	wings.set_value(wingsValue);
+
 
 // Delay (this is necessary for some reason)
 pros::delay(20);

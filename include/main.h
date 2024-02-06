@@ -73,6 +73,7 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
+void move(int left, int right, double seconds);
 #ifdef __cplusplus
 }
 #endif
