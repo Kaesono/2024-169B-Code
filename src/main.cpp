@@ -95,15 +95,14 @@ void autonomous() {
 	pros::lcd::set_text(2, "Start autonomous code");
 
 	move(127, 127, 200);
-	move(-127, 127, 100);
+	move(127, -127, 150);
 	move(127, 127, 400);
-	intake.move(127);
-	move(127, -127, 100);
-	move(127, 127, 500);
-	move(-127, -127, 5000);
+	move(-127, 127, 160);
 
 }
 
+// Move function:
+// The value "seconds" is in centiseconds
 void move(int left, int right, double seconds) {
 	// Move motors
 	left_wheel_front.move(left);
@@ -181,11 +180,11 @@ while (true) {
 
 	// Handle catapult
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-		catapult.move(-69);
+		catapult.move(-130);
 	}
 
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-		catapult.move(69);
+		catapult.move(130);
 	}
 
 	else {
