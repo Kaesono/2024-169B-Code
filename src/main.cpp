@@ -92,14 +92,34 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+
+//Set offensive or defensive autonomous
+bool offensive = true;
+
+if (offensive = true){
 	pros::lcd::set_text(2, "Start autonomous code");
 
 	move(127, 127, 200);
 	move(127, -127, 150);
-	move(127, 127, 400);
+	move(127, 127, 450);
 	move(-127, 127, 160);
+	intake.move(-127);
+	move(127, 127, 300);
+	move(-127, -127, 250);
+	move(127, 127, 350);
+	intake.move(0);
+	move(-127, -127, 100);
+	move(127, -127, 250);
+	move(-127, -127, 600);
+	move(127, -127, 260);
+	move(-100, -100, 600);
+}
+else if (offensive = false){
 
 }
+
+}
+
 
 // Move function:
 // The value "seconds" is in centiseconds
