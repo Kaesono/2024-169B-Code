@@ -94,32 +94,88 @@ void competition_initialize() {}
 void autonomous() {
 
 //Set offensive or defensive autonomous
+
+// ONLY call 'prog' if you are doing Skills autonomous
+//prog();
+
+// This doesn't really work
 bool offensive = true;
 
 if (offensive = true){
 	pros::lcd::set_text(2, "Start autonomous code");
 
-	move(127, 127, 200);
-	move(127, -127, 150);
-	move(127, 127, 450);
-	move(-127, 127, 160);
+	move(127, 127, 150);
+	pros::delay(500);
+	move(127, -127, 190);
+	pros::delay(500);
+	move(127, 127, 550);
+	pros::delay(500);
+	move(-127, 127, 180);
+	pros::delay(500);
 	intake.move(-127);
+	pros::delay(500);
 	move(127, 127, 300);
+	pros::delay(500);
 	move(-127, -127, 250);
+	pros::delay(500);
 	move(127, 127, 350);
+	pros::delay(500);
 	intake.move(0);
-	move(-127, -127, 100);
-	move(127, -127, 250);
-	move(-127, -127, 600);
-	move(127, -127, 260);
-	move(-100, -100, 600);
+	pros::delay(500);
+	move(-127, -127, 200);
+	pros::delay(500);
+	move(-127, 127, 270);
+	pros::delay(500);
+	move(127, 127, 1000);
+	pros::delay(500);
+	wings.set_value(true);
+	pros::delay(500);
+	move(50, -50, 100);
+
+	pros::delay(500);
 }
 else if (offensive = false){
 
+	move(127, 127, 150);
+	pros::delay(500);
+	move(-127, 127, 200);
+	pros::delay(500);
+	move(127, 127, 550);
+	pros::delay(500);
+	move(127, -127, 180);
+	pros::delay(500);
+	intake.move(-127);
+	pros::delay(500);
+	move(127, 127, 300);
+	pros::delay(500);
+	move(-127, -127, 250);
+	pros::delay(500);
+	move(127, 127, 350);
+	pros::delay(500);
+	intake.move(0);
+	pros::delay(500);
+	move(-127, -127, 200);
+	pros::delay(500);
+	move(127, -127, 270);
+	pros::delay(500);
+	move(127, 127, 1000);
+	pros::delay(500);
+	wings.set_value(true);
+	pros::delay(500);
+	move(-50, 50, 100);
+
+	pros::delay(500);
 }
 
 }
 
+void prog(){
+
+	move(-50, -50, 300);
+	catapult.move(100);
+
+pros::delay(999999999999);
+}
 
 // Move function:
 // The value "seconds" is in centiseconds
@@ -200,11 +256,11 @@ while (true) {
 
 	// Handle catapult
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-		catapult.move(-130);
+		catapult.move(-100);
 	}
 
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-		catapult.move(130);
+		catapult.move(100);
 	}
 
 	else {

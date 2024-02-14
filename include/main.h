@@ -74,6 +74,7 @@ void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
 void move(int left, int right, double seconds);
+void prog();
 #ifdef __cplusplus
 }
 #endif
