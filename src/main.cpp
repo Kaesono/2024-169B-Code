@@ -101,7 +101,7 @@ void autonomous() {
 // This doesn't really work
 bool offensive = true;
 
-if (offensive = true){
+if (offensive == true){ //Double == for checking value instead of writing value
 	pros::lcd::set_text(2, "Start autonomous code");
 
 	move(127, 127, 150);
@@ -134,7 +134,7 @@ if (offensive = true){
 
 	pros::delay(500);
 }
-else if (offensive = false){
+else if (offensive == false){ //Double == for checking value instead of writing value
 
 	move(127, 127, 150);
 	pros::delay(500);
