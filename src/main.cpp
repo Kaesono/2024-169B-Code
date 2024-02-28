@@ -5,19 +5,19 @@
 
 // Set left wheel ports (true indicates reversed)
 pros::Motor left_wheel_front (17, true);
-pros::Motor left_wheel_middle (18); // (The one on top)
+pros::Motor left_wheel_middle (18, true);
 pros::Motor left_wheel_back (20, true);
 
 // Set right wheel ports (true indicates reversed)
 pros::Motor right_wheel_front (12);
-pros::Motor right_wheel_middle (14, true); // (The one on top)
-pros::Motor right_wheel_back (15);
+pros::Motor right_wheel_middle (13);
+pros::Motor right_wheel_back (14);
 
 // Set intake motor port
 pros::Motor intake (5);
 
 // Set catapult motor port
-pros::Motor catapult (10);
+pros::Motor catapult (8);
 
 // Set hang pneumatic port
 pros::ADIDigitalOut hang ('A', false);
@@ -50,7 +50,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Startup nominal");
+	pros::lcd::set_text(1, "169B!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 
@@ -92,6 +92,38 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+/*
+Basic Field Setup in Normal Matches
+
+||||||||||||||||||||||||||||||||||||||
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|----|OO|----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+||||||||||||||||||||||||||||||||||||||
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+|_____\||||||||||||||||||||||||/=====|
+|-----|-----|-----||-----|-----||----|
+|-----|-----|-----||-----|-----||----|
+|-----|-----|-----||-----|-----||----|
+||||||||||||||||||||||||||||||||||||||
+|-----|-----|-----||-----|-----||----|
+|-----|-----|-----||-----|-----||----|
+|-----|-----|-----||-----|-----||----|
+|_____/||||||||||||||||||||||||\=====|
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+||||||||||||||||||||||||||||||||||||||
+|-----|-----|-----||-----|-----|-----|
+|-----|-----|----|OO|----|-----|-----|
+|-----|-----|-----||-----|-----|-----|
+||||||||||||||||||||||||||||||||||||||
+
+*/
+
+
 
 //Set offensive or defensive autonomous
 
@@ -99,6 +131,7 @@ void autonomous() {
 //prog();
 
 // This doesn't really work
+// JK it works, I just wasn't putting '=='
 bool offensive = true;
 
 if (offensive == true){ //Double == for checking value instead of writing value
@@ -174,7 +207,7 @@ void prog(){
 	move(-50, -50, 300);
 	catapult.move(100);
 
-pros::delay(999999999999);
+//pros::delay(999999999999);
 }
 
 // Move function:
@@ -256,11 +289,11 @@ while (true) {
 
 	// Handle catapult
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-		catapult.move(-100);
+		catapult.move(-80);
 	}
 
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-		catapult.move(100);
+		catapult.move(80);
 	}
 
 	else {
