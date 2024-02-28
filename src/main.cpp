@@ -10,8 +10,8 @@ pros::Motor left_wheel_back (20, true);
 
 // Set right wheel ports (true indicates reversed)
 pros::Motor right_wheel_front (12);
-pros::Motor right_wheel_middle (13);
-pros::Motor right_wheel_back (14);
+pros::Motor right_wheel_middle (14);
+pros::Motor right_wheel_back (15);
 
 // Set intake motor port
 pros::Motor intake (5);
